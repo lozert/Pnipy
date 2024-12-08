@@ -1,0 +1,97 @@
+@startuml
+
+class Student {
+    + id
+    + name
+    + group
+    + attach_to_journal(journal: Journal)
+}
+Student --> StudentObserver
+Student --> Group
+
+class StudentObserver {
+    + update()
+}
+StudentObserver ..> Observer
+
+
+class Group {
+    + id: int
+    + name: str
+    + students: List[Student]
+    + journal
+    + schedule: Optional[List[Course]]
+    + update()
+}
+
+Group --> Schedule
+
+
+
+
+class Teacher {
+    + id: int
+    + name: str
+
+}
+Teacher --> Journal
+Teacher --> TeacherObserver
+
+
+class Journal {
+    + entries: List[Dict]
+    + strategy: JournalStrategy
+    + observer: List[Union[Group, Teacher]]
+    + add_entry(entry: Dict)
+    + change_strategy(strategy: JournalStrategy)
+    + attach(observer: Union[Student, Teacher])
+    + detach(observer: Union[Student, Teacher])
+    + notify_observer()
+}
+
+
+class JournalStrategy {
+    // Доделать
+}
+JournalStrategy --> Journal
+
+interface Observer {
+    + update()
+}
+
+Observer --> Journal
+
+class TeacherObserver {
+    + update()
+}
+TeacherObserver ..> Observer
+
+
+class Course {
+    + id
+    + name
+    + teacher
+    + groups
+}
+
+class CourseFactory {
+    create_course(course_type: str) -> Course
+}
+
+CourseFactory --> Course
+Course --> Schedule
+
+class Schedule {
+    + courses: List[Courses]
+    + group_schedule:  Dict[Group, List[Course]]
+    + add_course(course: Course, group: Group)
+    + get_schedule(group: Group) -> List[Course]
+}
+
+class singelton {
+    - instance: Schedule
+    + get_instance() -> Schedule
+}
+
+
+@enduml

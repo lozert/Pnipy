@@ -1,0 +1,221 @@
+@startuml
+
+class User {
+    -login: String
+    -password: String
+    -role: String
+    --
+    +logIn(): void
+    +logOut(): void
+}
+
+class Student {
+    -courses: List<Course>
+    -grades: Map<Course, Grade>
+    -attendance: Map<Session, Boolean>
+    --
+    +enrollInCourse(course: Course): void
+    +viewGrades(): Map<Course, Grade>
+}
+
+class Teacher {
+    -id: String
+    -name: String
+    --
+    +assignCourse(course: Course): void
+}
+
+' Класс Receiver, который выполняет действия
+interface Command {
+    +execute(): void
+}
+
+' Класс Administrator, который является Receiver и не содержит конкретных методов
+class Administrator {
+    -id: String
+    -name: String
+    -role: String
+    --
+    +performAction(action: Command): void
+}
+
+' Интерфейс для описания доступных операций (создание, удаление пользователей)
+interface AdministratorActions {
+    +createUser(login: String, password: String, role: String): void
+    +deleteUser(login: String): void
+}
+
+' Конкретные команды, которые реализуют интерфейс Command
+class CreateUserCommand implements Command {
+    -login: String
+    -password: String
+    -role: String
+    --
+    +execute(): void
+}
+
+class DeleteUserCommand implements Command {
+    -login: String
+    --
+    +execute(): void
+}
+
+' Класс Invoker, который управляет командами
+class CommandExecutor {
+    -command: Command
+    --
+    +setCommand(command: Command): void
+    +executeCommand(): void
+}
+
+' Связи между классами
+Administrator --> AdministratorActions : uses
+Administrator --> Command : execute action
+CommandExecutor --> Command
+CreateUserCommand --> Command
+DeleteUserCommand --> Command
+CreateUserCommand -down-> AdministratorActions : execute() -> createUser()
+DeleteUserCommand -down-> AdministratorActions : execute() -> deleteUser()
+
+' Иерархия пользователей
+User <|-- Student
+User <|-- Teacher
+User <|-- Administrator
+
+' Классы для курсов и экзаменов
+class Course {
+    -title: String
+    -teacher: Teacher
+    -students: List<Student>
+    -gradingStrategy: GradingStrategy
+    -exams: List<Exam>
+    --
+    +addStudent(student: Student): void
+    +calculateFinalGrade(student: Student): String
+    +assignExam(exam: Exam): void
+}
+
+class Exam {
+    -type: String
+    -date: Date
+    -gradingStrategy: GradingStrategy
+    --
+    +conductExam(): void
+    +calculateGrade(): String
+}
+
+Course "1" *-- "many" Exam
+
+
+
+class Journal {
+    -studentsGrades: Map<Student, Map<Course, Grade>>
+    -attendance: Map<Student, Map<Session, Boolean>>
+    --
+    +addGrade(student: Student, course: Course, grade: Grade): void
+    +addAttendance(student: Student, session: Session, attended: Boolean): void
+}
+
+class JournalSingleton {
+    -instance: JournalSingleton
+    --
+    +getInstance(): JournalSingleton
+}
+
+JournalSingleton "1" o-- "1" Journal
+
+' Классы для групп и подгрупп
+class Group {
+    -name: String
+    -students: List<Student>
+    -subgroups: List<Subgroup>
+    --
+    +addStudent(student: Student): void
+    +addSubgroup(subgroup: Subgroup): void
+    +assignSchedule(schedule: Schedule): void
+}
+
+class Subgroup {
+    -name: String
+    -students: List<Student>
+    --
+    +addStudent(student: Student): void
+    +getSubgroupInfo(): String
+}
+
+Group "1" *-- "many" Subgroup
+Group "1" *-- "many" Student
+
+' Классы для расписания
+class Schedule {
+    -subgroup: Subgroup
+    -sessions: List<Session>
+    -location: String
+    -time: Time
+    --
+    +addSession(session: Session): void
+    +updateSession(session: Session): void
+    +getScheduleInfo(): String
+}
+
+abstract class Session {
+    -course: Course
+    -teacher: Teacher
+    -date: Date
+    -time: Time
+    -sessionType: String
+    -assessmentMethod: AssessmentStrategy
+    -attendanceControl: Boolean
+    --
+    +getSessionDetails(): String
+}
+
+
+
+Course "1" *-- "*" Session
+
+
+
+Grade <|-- WeightedGrade
+Grade <|-- CommentedGrade
+
+
+
+
+Schedule "1" *-- "many" Session
+Session "1" *-- "1" Course
+Subgroup "1" *-- "1" Schedule
+Schedule "1" o-- "many" NotificationObserver
+Course "1" *-- "1" Teacher
+
+
+
+
+' Классы для уведомлений
+class Notification {
+    -observers: List<NotificationObserver>
+    --
+    +addObserver(observer: NotificationObserver): void
+    +removeObserver(observer: NotificationObserver): void
+    +notifyObservers(): void
+}
+
+interface NotificationObserver {
+    +update(): void
+}
+
+class StudentNotification implements NotificationObserver {
+    --
+    +update(): void
+}
+
+class TeacherNotification implements NotificationObserver {
+    --
+    +update(): void
+}
+
+NotificationObserver o-- Notification
+TeacherNotification o-- Notification
+StudentNotification o-- Notification
+
+@enduml

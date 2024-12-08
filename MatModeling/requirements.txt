@@ -1,0 +1,6 @@
+numpy==1.25.2
+time
+os
+pytest
+pytest-html
+pytest-cov
