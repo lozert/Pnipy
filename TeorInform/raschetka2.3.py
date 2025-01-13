@@ -13,7 +13,7 @@ if not all(0 <= p <= 1 for p in P) or abs(sum(P) - 1) > 1e-6:
 
 # Генерация всех возможных кодов фиксированной длины
 fixed_length = 2  # Длина ансамбля которого мы хотим закодировать
-binary_length = 3 # Длина в бинарного кода которым мы пытаемя закодировать
+binary_length = 2 # Длина в бинарного кода которым мы пытаемя закодировать
 
 
 
@@ -36,12 +36,19 @@ code_probabilities.sort(key=lambda x: x[2])
 # Вывод в одной строке
 print("Коды с вероятностями и двоичное кодирование символов:")
 i = 0
+Pe_code= {}
 sum_Pe = 0
 for code, length, probability in code_probabilities:
     if i < len(X)** fixed_length - 2**binary_length:
+        Pe_code[probability] = Pe_code.get(probability, 0) + 1
         sum_Pe += probability
     print(f"Код: {''.join(code)} |  {probability:.6f} | { format(i, f'0{binary_length}b')[-binary_length:]}")
     i +=1
 
 
-print(f"Вероятность ошибки {sum_Pe}")
+
+string_Pe = ""
+for prob, count in Pe_code.items():
+    string_Pe += f" {prob:.6f} * {count} +"
+
+print(f"Вероятность ошибки: {string_Pe[:-1]}= {sum_Pe}")
