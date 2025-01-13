@@ -13,7 +13,7 @@ if not all(0 <= p <= 1 for p in P) or abs(sum(P) - 1) > 1e-6:
 
 # Генерация всех возможных кодов фиксированной длины
 fixed_length = 2  # Длина ансамбля которого мы хотим закодировать
-binary_length = 2 # Длина в бинарного кода которым мы пытаемя закодировать
+binary_length = 3 # Длина в бинарного кода которым мы пытаемя закодировать
 
 
 
@@ -52,3 +52,4 @@ for prob, count in Pe_code.items():
     string_Pe += f" {prob:.6f} * {count} +"
 
 print(f"Вероятность ошибки: {string_Pe[:-1]}= {sum_Pe}")
+print(f"Скорость кодирования: { binary_length / fixed_length} бит/символ")
