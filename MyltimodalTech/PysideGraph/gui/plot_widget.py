@@ -13,10 +13,11 @@ class PlotWidget(QWidget):
         self.setMinimumSize(600, 600)
         self.style = PlotStyle()
 
-    def set_data(self, plot_base, x_values, y_values):
+    def set_data(self, plot_base, x_values, y_values, function_input):
         self.x_values = x_values
         self.y_values = y_values
         self.plot_base = plot_base
+        self.function_input = function_input
         self.update()
 
     def paintEvent(self, event):
@@ -32,13 +33,13 @@ class PlotWidget(QWidget):
         elif self.plot_base == "Diagram Plot":
             self.plot_base = PlotDiagram(self.x_values, self.y_values)
         elif self.plot_base == "Gistogram triangle":
-            self.plot_base = PlotTriangle(self.x_values, self.y_values)
+            self.plot_base = PlotTriangle(self.x_values, self.y_values, self.function_input, self.width(), self.height())
 
         if self.plot_base:
             # Рисуем сетку
-            self.plot_base.draw_grid(painter, self.width(), self.height(), self.style)
+            self.plot_base.draw_grid(painter, self.style)
 
             # Рисуем график
-            self.plot_base.draw_plot(painter, self.width(), self.height())
+            self.plot_base.draw_plot(painter)
 
         painter.end()
