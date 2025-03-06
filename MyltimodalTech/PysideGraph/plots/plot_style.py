@@ -6,6 +6,7 @@ class PlotStyle:
         self.line_color = QColor(0, 0, 0)  # Чёрные линии
         self.line_width = 10  # Толщина линий
         self.grid_color = QColor(50, 50, 50)  # Цвет сетки
+        self.grid_black = QColor(0,0,0)
         self.grid_width = 1  # Толщина линий сетки
 
     def set_background_color(self, color):

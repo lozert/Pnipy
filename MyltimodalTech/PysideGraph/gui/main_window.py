@@ -15,7 +15,7 @@ class MainWindow(QMainWindow):
         self.function_inputs = []
         self.range_input = QLineEdit()
         self.range_input.setPlaceholderText("Enter range (e.g., 0,10,100)")
-        self.range_input.setText("1,10,11")
+        self.range_input.setText("1,10,5")
         self.add_function_button = QPushButton("Add Function")
         self.plot_button = QPushButton("Plot")
         self.plot_type_combo = QComboBox()
@@ -52,7 +52,7 @@ class MainWindow(QMainWindow):
         function_input.setPlaceholderText("Enter function (e.g., np.sin(x))")
         self.function_inputs.append(function_input)
         if len(self.function_inputs) == 1:
-            function_input.setText("10 *np.sin(2**x + np.exp(np.cos(np.abs(x))))")
+            function_input.setText("10 * sin(2**x + exp(cos(abs(x))))")
         self.function_layout.addWidget(function_input)
 
     def plot_graph(self):
@@ -60,7 +60,7 @@ class MainWindow(QMainWindow):
         data_processor = DataProcessor(self.function_inputs, self.range_input.text())
         x_values, y_values = data_processor.process_data()
 
-        plot_generator = PlotGenerator(plot_type, x_values, y_values)
+        plot_generator = PlotGenerator(plot_type, x_values, y_values, self.function_inputs)
         plot_generator.generate_plot(self.plot_widget)
 
 # Пример использования
