@@ -20,7 +20,7 @@ class Table:
 data = {}
 data[0] = Table(0, 0, 0, 0)
 
-input_text = "early_to_bed_and_early_to_rise_makes_a_man_wise"
+input_text = "IF_WE_CANNOT_DO_AS_WE_WOULD_WE_SHOULD_DO_AS_WE_CAN"
 
 def indesc(item):
     """Функция для поиска индексов элементов в словаре, соответствующих заданному описанию."""
@@ -65,7 +65,7 @@ while index < len(input_text):
         else:
             num_letter = indesc(letter[:-1])[0]
 
-        ceil = int(np.ceil(np.log2(index)))
+        ceil = int(np.ceil(np.log2(dict_index)))
         if num_letter == dict_index:
             
             code_symbol = "0" * ceil + f"bin({input_text[index]})"
